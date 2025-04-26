@@ -17,11 +17,9 @@ class Crawler:
             print(f'Error extracting synopsis: {e}')
             return None
     
-    def salvarSinopseFilme(self, filme, sinopse):
-        arq_saida = open(filme+'_sinopse.txt', 'w',encoding='utf-8')
-        for line in sinopse:
-            arq_saida.write(line)
-        arq_saida.close()
+    def save_film_synopsis(self, film, synopsis):
+        with open(f'{film}_synopsis.txt', 'w', encoding='utf-8') as output_file:
+            output_file.write(synopsis)
 
     def extrairComentariosFilme(self, filme, n):
         comentarios = []
@@ -45,7 +43,7 @@ filme = input('Digite o código do filme, conforme listado na barra de endereço
 n = int(input('Digite quantas páginas de comentários você deseja consultar: '))
 crawler = Crawler()
 sinopse = crawler.extract_film_synopsis(filme)
-crawler.salvarSinopseFilme(filme, sinopse)
+crawler.save_film_synopsis(filme, sinopse)
 comentarios = crawler.extrairComentariosFilme(filme, n)
 crawler.salvarComentariosFilme(filme, comentarios)
 print('Programa executado com sucesso. Consulte os arquivos gerados com a sinopse e os comentários do filme.')
