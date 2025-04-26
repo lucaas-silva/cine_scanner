@@ -4,11 +4,15 @@ import time
 import random
 
 
+HEADERS = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
+}
+
 class Crawler:
     def extract_film_synopsis(self, film):      
         try:
-            url = "https://www.adorocinema.com/filmes/" + film +'/'
-            response = requests.get(url)
+            url = f'https://www.adorocinema.com/filmes/{film}/'
+            response = requests.get(url, headers=HEADERS)
             response.raise_for_status()
             bs_s = BeautifulSoup(response.text, 'html.parser')
             synopsis_tag = bs_s.find('div', class_="content-txt")
@@ -25,8 +29,8 @@ class Crawler:
 
     def find_total_pages(self, film):
         try:
-            url = f"https://www.adorocinema.com/filmes/{film}/criticas/espectadores/?page=1"
-            response = requests.get(url)
+            url = f'https://www.adorocinema.com/filmes/{film}/criticas/espectadores/?page=1'
+            response = requests.get(url, headers=HEADERS)
             response.raise_for_status()
             bs = BeautifulSoup(response.text, 'html.parser')
             pagination = bs.find('div', class_='pagination-item-holder')
@@ -50,8 +54,8 @@ class Crawler:
         comments = []
         for i in range(1, page + 1):
             try:
-                url = 'https://www.adorocinema.com/filmes/' + film + '/criticas/espectadores/?page=' + str(i)
-                response = requests.get(url)
+                url = f'https://www.adorocinema.com/filmes/{film}/criticas/espectadores/?page={i}'
+                response = requests.get(url, headers=HEADERS)
                 response.raise_for_status()
                 bs_c = BeautifulSoup(response.text, 'html.parser')
                 comments_tags = bs_c.find_all('div', class_="content-txt review-card-content")
