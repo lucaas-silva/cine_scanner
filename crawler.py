@@ -61,7 +61,7 @@ class Crawler:
                 continue
         return comments
 
-    def salvarComentariosFilme(self, film, comments):
+    def save_movie_comments(self, film, comments):
         with open(f'{film}_comments.txt', 'w', encoding='utf-8') as output_file:
             for comment in comments:
                 output_file.write(comment + '\n')
@@ -75,5 +75,5 @@ crawler = Crawler()
 sinopse = crawler.extract_film_synopsis(filme)
 crawler.save_film_synopsis(filme, sinopse)
 comentarios = crawler.extract_film_comments(filme, n)
-crawler.salvarComentariosFilme(filme, comentarios)
+crawler.save_movie_comments(filme, comentarios)
 print('Programa executado com sucesso. Consulte os arquivos gerados com a sinopse e os comentários do filme.')
