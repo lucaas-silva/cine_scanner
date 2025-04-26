@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
+import time
+import random
 
 
 class Crawler:
@@ -48,7 +50,7 @@ class Crawler:
         comments = []
         for i in range(1, page + 1):
             try:
-                url = 'http://www.adorocinema.com/filmes/' + filme + '/criticas/espectadores/?page=' + str(i)
+                url = 'https://www.adorocinema.com/filmes/' + film + '/criticas/espectadores/?page=' + str(i)
                 response = requests.get(url)
                 response.raise_for_status()
                 bs_c = BeautifulSoup(response.text, 'html.parser')
@@ -56,6 +58,7 @@ class Crawler:
                 for comment_tag in comments_tags:
                     comment = comment_tag.get_text(strip=True)
                     comments.append(comment)
+                time.sleep(random.uniform(1, 3))
             except Exception as e:
                 print(f'Error extracting comment on page {i}: {e}')
                 continue
