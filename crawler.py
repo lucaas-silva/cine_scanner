@@ -1,14 +1,21 @@
 import requests
 from bs4 import BeautifulSoup
 
-class AdoroCinema:
 
-    def extrairSinopseFilme (self, filme):      
-        url = "https://www.adorocinema.com/filmes/" + filme +'/'
-        htmlFilme = requests.get(url).text
-        bsS = BeautifulSoup(htmlFilme, 'html.parser')
-        sinopse = bsS.find('div', class_="content-txt").get_text(strip=True)
-        return sinopse
+class Crawler:
+    def extract_film_synopsis(self, film):      
+        try:
+            url = "https://www.adorocinema.com/filmes/" + film +'/'
+            response = requests.get(url)
+            response.raise_for_status()
+            bsS = BeautifulSoup(response.text, 'html.parser')
+            synopsis_tag = bsS.find('div', class_="content-txt")
+            if synopsis_tag:
+                return synopsis_tag.get_text(strip=True)
+            return 'Synopsis not found.'
+        except Exception as e:
+            print(f'Error extracting synopsis: {e}')
+            return None
     
     def salvarSinopseFilme(self, filme, sinopse):
         arq_saida = open(filme+'_sinopse.txt', 'w',encoding='utf-8')
@@ -36,8 +43,8 @@ class AdoroCinema:
 
 filme = input('Digite o código do filme, conforme listado na barra de endereço do site https://www.adorocinema.com/: ')
 n = int(input('Digite quantas páginas de comentários você deseja consultar: '))
-crawler = AdoroCinema()
-sinopse = crawler.extrairSinopseFilme(filme)
+crawler = Crawler()
+sinopse = crawler.extract_film_synopsis(filme)
 crawler.salvarSinopseFilme(filme, sinopse)
 comentarios = crawler.extrairComentariosFilme(filme, n)
 crawler.salvarComentariosFilme(filme, comentarios)
