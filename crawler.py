@@ -73,14 +73,26 @@ class Crawler:
             for comment in comments:
                 output_file.write(comment + '\n')
 
+    def run(self, film, pages_to_fetch):
+        print("Iniciando o Crawler...")
+        sinopse = self.extract_film_synopsis(film)
+        if sinopse:
+            self.save_film_synopsis(film, sinopse)
+            print("Sinopse salva.")
+        else:
+            print("Sinopse não encontrada.")
 
-# filme = input('Digite o código do filme, conforme listado na barra de endereço do site https://www.adorocinema.com/: ')
-# n = int(input('Digite quantas páginas de comentários você deseja consultar: '))
+        comentarios = self.extract_film_comments(film, pages_to_fetch)
+        if comentarios:
+            self.save_movie_comments(film, comentarios)
+            print("Comentários salvos.")
+        else:
+            print("Nenhum comentário encontrado.")
+        print("Crawler finalizado.")
+
+
 filme = 'filme-260627'
 n = 7
+
 crawler = Crawler()
-sinopse = crawler.extract_film_synopsis(filme)
-crawler.save_film_synopsis(filme, sinopse)
-comentarios = crawler.extract_film_comments(filme, n)
-crawler.save_movie_comments(filme, comentarios)
-print('Programa executado com sucesso. Consulte os arquivos gerados com a sinopse e os comentários do filme.')
+crawler.run(filme, n)
