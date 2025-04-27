@@ -1,5 +1,6 @@
-from bs4 import BeautifulSoup
 from comment_evaluator import CommentEvaluator
+from collections import Counter
+from bs4 import BeautifulSoup
 import requests
 import time
 import random
@@ -72,10 +73,30 @@ class Crawler:
 
     def save_movie_comments(self, film, comments):
         comment_evaluator = CommentEvaluator()
+        evaluation_counter = Counter()
+
         with open(f'files/{film}_comments.txt', 'w', encoding='utf-8') as output_file:
             for comment in comments:
+                evaluation = comment_evaluator.evaluate_comment(comment)
+
                 output_file.write(comment + '\n')
-                output_file.write(comment_evaluator.evaluate_comment(comment) + '\n\n')
+                output_file.write(evaluation + '\n\n')
+
+                evaluation_counter[evaluation] += 1
+
+        self.get_report(
+            total=len(comments),
+            pos=evaluation_counter['positive'],
+            neg=evaluation_counter['negative'],
+            neu=evaluation_counter['neutral']
+        )
+
+    @staticmethod
+    def get_report(total, pos, neg, neu):
+        print(f'total: {total}')
+        print(f'pos: {(pos*100) / total:.2f}%')
+        print(f'neg: {(neg*100) / total:.2f}%')
+        print(f'neutral: {(neu*100) / total:.2f}%')
 
     def run(self, film, pages_to_fetch):
         print('Starting the crawler...')
