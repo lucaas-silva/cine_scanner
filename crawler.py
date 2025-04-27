@@ -74,25 +74,18 @@ class Crawler:
                 output_file.write(comment + '\n')
 
     def run(self, film, pages_to_fetch):
-        print("Iniciando o Crawler...")
-        sinopse = self.extract_film_synopsis(film)
-        if sinopse:
-            self.save_film_synopsis(film, sinopse)
-            print("Sinopse salva.")
+        print('Starting the crawler...')
+        synopsis = self.extract_film_synopsis(film)
+        if synopsis:
+            self.save_film_synopsis(film, synopsis)
+            print('Synopsis saved.')
         else:
-            print("Sinopse não encontrada.")
+            print('Synopsis not found.')
 
-        comentarios = self.extract_film_comments(film, pages_to_fetch)
-        if comentarios:
-            self.save_movie_comments(film, comentarios)
-            print("Comentários salvos.")
+        comments = self.extract_film_comments(film, pages_to_fetch)
+        if comments:
+            self.save_movie_comments(film, comments)
+            print('Comments saved.')
         else:
-            print("Nenhum comentário encontrado.")
-        print("Crawler finalizado.")
-
-
-filme = 'filme-260627'
-n = 7
-
-crawler = Crawler()
-crawler.run(filme, n)
+            print('No comments found.')
+        print('Crawler finished.')
