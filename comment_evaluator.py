@@ -34,7 +34,8 @@ class CommentEvaluator:
         r'\bemocional\b', r'\bemocionais\b',
         r'\bextraordinário\b', r'\bextraordinária\b', r'\bextraordinários\b', r'\bextraordinárias\b',
         r'\bprimoroso\b', r'\bprimorosa\b', r'\bprimorosos\b', r'\bprimorosas\b',
-        r'\bbom\b', r'\bboa\b', r'\bbons\b', r'\bboas\b'
+        r'\bbom\b', r'\bboa\b', r'\bbons\b', r'\bboas\b',
+        r'\bótimo\b'
     ]
     negative_patterns = [
         r'\bhorrível\b', r'\bhorríveis\b',
@@ -108,10 +109,18 @@ class CommentEvaluator:
         comment_lower = comment.lower()
 
         for pattern in self.positive_patterns:
-            positive_count += len(re.findall(pattern, comment_lower))
+            for match in re.finditer(pattern, comment_lower):
+                if self.detect_negation(comment, match.start()):
+                    negative_count +=1
+                else:
+                    positive_count += 1
 
         for pattern in self.negative_patterns:
-            negative_count += len(re.findall(pattern, comment_lower))
+            for match in re.finditer(pattern, comment_lower):
+                if self.detect_negation(comment, match.start()):
+                    positive_count += 1
+                else:
+                    negative_count +=1
 
         if positive_count > negative_count:
             return 'positive'
@@ -119,3 +128,27 @@ class CommentEvaluator:
             return 'negative'
         else:
             return 'neutral'
+
+if __name__ == '__main__':
+    comments = [
+        "Esse filme é maravilhoso, a história é incrível!",
+        "A atuação dos atores foi péssima, não gostei do filme.",
+        "O filme foi bom, mas o final poderia ter sido melhor.",
+        "Que filme sensacional! Adorei cada cena.",
+        "O enredo foi fraco e chato, não recomendo.",
+        "O filme é ótimo, mas o ritmo é muito lento.",
+        "Não gostei, foi uma decepção. Poderia ter sido melhor.",
+        "Que história fantástica, me emocionei muito!",
+        "Achei o filme ok, nem bom, nem ruim. Meio morno.",
+        "Este é o pior filme que já vi, uma grande decepção.",
+        "Perfeito, um dos melhores filmes que já assisti.",
+        "O filme tem seus pontos positivos, mas é bem mediano no geral.",
+        "Foi bom, mas poderia ter sido melhor. Não é excelente.",
+        "O roteiro é excelente, mas a direção deixou a desejar.",
+        "Nada demais, apenas um filme comum."
+    ]
+    ev = CommentEvaluator()
+    for comment in comments:
+        print(f"Comentário: {comment}")
+        print(f"Resultado: {ev.evaluate_comment(comment)}")
+        print()
