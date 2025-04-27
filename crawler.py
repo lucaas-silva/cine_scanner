@@ -1,5 +1,6 @@
-import requests
 from bs4 import BeautifulSoup
+from comment_evaluator import CommentEvaluator
+import requests
 import time
 import random
 
@@ -7,6 +8,7 @@ import random
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36'
 }
+
 
 class Crawler:
     def extract_film_synopsis(self, film):      
@@ -24,7 +26,7 @@ class Crawler:
             return None
     
     def save_film_synopsis(self, film, synopsis):
-        with open(f'{film}_synopsis.txt', 'w', encoding='utf-8') as output_file:
+        with open(f'files/{film}_synopsis.txt', 'w', encoding='utf-8') as output_file:
             output_file.write(synopsis)
 
     def find_total_pages(self, film):
@@ -69,9 +71,11 @@ class Crawler:
         return comments
 
     def save_movie_comments(self, film, comments):
-        with open(f'{film}_comments.txt', 'w', encoding='utf-8') as output_file:
+        comment_evaluator = CommentEvaluator()
+        with open(f'files/{film}_comments.txt', 'w', encoding='utf-8') as output_file:
             for comment in comments:
                 output_file.write(comment + '\n')
+                output_file.write(comment_evaluator.evaluate_comment(comment) + '\n\n')
 
     def run(self, film, pages_to_fetch):
         print('Starting the crawler...')
