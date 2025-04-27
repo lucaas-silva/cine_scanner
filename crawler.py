@@ -11,7 +11,7 @@ HEADERS = {
 
 
 class Crawler:
-    def extract_film_synopsis(self, film):      
+    def extract_film_synopsis(self, film):
         try:
             url = f'https://www.adorocinema.com/filmes/{film}/'
             response = requests.get(url, headers=HEADERS)
@@ -24,7 +24,7 @@ class Crawler:
         except Exception as e:
             print(f'Error extracting synopsis: {e}')
             return None
-    
+
     def save_film_synopsis(self, film, synopsis):
         with open(f'files/{film}_synopsis.txt', 'w', encoding='utf-8') as output_file:
             output_file.write(synopsis)
