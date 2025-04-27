@@ -75,15 +75,9 @@ class CommentEvaluator:
 ]
 
     def detect_negation(self, comment, match_start_index):
-        """
-        Detects whether a negation occurs before a match in the comment.
-        A negation is typically a word like 'não', 'nem', 'nunca', 'jamais'.
-        """
         negations = ['não', 'nem', 'nunca', 'jamais']
-        # Check the window of text before the match (up to 10 characters before)
         window = comment[max(0, match_start_index - 10):match_start_index].lower()
         
-        # Check if any negation word is present in the window
         for neg in negations:
             if neg in window:
                 return True
