@@ -16,12 +16,12 @@ class CommentEvaluator:
         return False
 
     def evaluate_comment(self, comment, is_fragment=False):
+
         comment = comment.strip()
 
         if not is_fragment and len(comment) > 50:
             fragments = re.split(r'[.,;!?]', comment)
             results = {'positive': 0, 'negative': 0, 'neutral': 0}
-
             for fragment in fragments:
                 fragment = fragment.strip()
                 if fragment:
